@@ -2,15 +2,18 @@ import { createFileRoute } from "@tanstack/react-router";
 import { INITIAL_BOARDS } from "@/data/boards";
 import type { Kudo } from "@/data/types";
 import { Card, CardContent } from "@/components/ui/card";
+import { useState } from "react";
+import AddKudoForm from "@/components/ui/add-kudo-form";
 
 export const Route = createFileRoute("/boards/$boardId")({
   component: BoardPage,
 });
 
 function BoardPage() {
-  const { boardId } = Route.useParams(); // 👀 Read the dynamic param
+  const { boardId } = Route.useParams();
   const board = INITIAL_BOARDS.find((b) => b.id === boardId);
 
+  const [kudos, setKudos] = useState<Kudo[]>(board?.kudos ?? []);
   if (!board) {
     return (
       <div className="text-center">
@@ -22,18 +25,23 @@ function BoardPage() {
     );
   }
 
+  function handleAddKudo(kudo: Kudo) {
+    setKudos((prev) => [...prev, kudo]);
+  }
+
   return (
     <div>
       <h1 className="mb-2 text-3xl font-bold">{board.title}</h1>
       <p className="mb-6 text-muted-foreground">{board.description}</p>
-
-      {board.kudos.length === 0 ? (
+      <AddKudoForm onAdd={handleAddKudo} /> {/* 👀 */}
+      {/* 👀 use kudos instead of board.kudos */}
+      {kudos.length === 0 ? (
         <p className="text-muted-foreground">
           No kudos yet. Be the first to add one!
         </p>
       ) : (
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {board.kudos.map((kudo) => (
+          {kudos.map((kudo) => (
             <KudoCard key={kudo.id} kudo={kudo} />
           ))}
         </div>
