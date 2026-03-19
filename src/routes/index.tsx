@@ -40,4 +40,3 @@ function HomePage() {
     </div>
   );
 }
-

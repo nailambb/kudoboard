@@ -37,7 +37,6 @@ function RootLayout() {
   );
 }
 
-
 function NotFound() {
   return (
     <div className="flex min-h-[50vh] flex-col items-center justify-center gap-4">
