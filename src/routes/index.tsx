@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { INITIAL_BOARDS } from "@/data/boards";
+import { useBoards } from "@/hooks/use-boards"; // 👀
 import {
   Card,
   CardDescription,
@@ -12,7 +12,7 @@ export const Route = createFileRoute("/")({
 });
 
 function HomePage() {
-  const boards = INITIAL_BOARDS;
+  const { boards } = useBoards(); // 👀
 
   return (
     <div>
@@ -21,8 +21,8 @@ function HomePage() {
         {boards.map((board) => (
           <Link
             key={board.id}
-            to="/boards/$boardId" // 👀 Dynamic route parameter
-            params={{ boardId: board.id }} // 👀 Pass the board ID
+            to="/boards/$boardId"
+            params={{ boardId: board.id }}
           >
             <Card className="transition-shadow hover:shadow-md">
               <CardHeader>

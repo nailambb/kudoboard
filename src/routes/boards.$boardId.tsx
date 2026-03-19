@@ -1,10 +1,8 @@
 import { createFileRoute } from "@tanstack/react-router";
+import AddKudoForm from "@/components/add-kudo-form";
+import KudoCard from "@/components/kudo-card";
+import { useBoards } from "@/hooks/use-boards";
 import type { Kudo } from "@/data/types";
-import { useEffect, useReducer } from "react";
-import AddKudoForm from "@/components/add-kudo-form.tsx";
-import KudoCard from "@/components/kudo-card.tsx";
-import { boardsReducer } from "@/reducers/boards";
-import { loadBoards, saveBoards } from "@/data/board-storage";
 
 export const Route = createFileRoute("/boards/$boardId")({
   component: BoardPage,
@@ -12,12 +10,7 @@ export const Route = createFileRoute("/boards/$boardId")({
 
 function BoardPage() {
   const { boardId } = Route.useParams();
-
-  const [boards, dispatch] = useReducer(boardsReducer, null, loadBoards);
-
-  useEffect(() => {
-    saveBoards(boards);
-  }, [boards]);
+  const { boards, addKudo, deleteKudo } = useBoards(); // 👀
 
   const board = boards.find((b) => b.id === boardId);
 
@@ -33,11 +26,11 @@ function BoardPage() {
   }
 
   const handleAddKudo = (kudo: Kudo) => {
-    dispatch({ type: "kudo_added", boardId: board.id, kudo });
+    addKudo(board.id, kudo); // 👀
   };
 
   const handleDeleteKudo = (kudoId: string) => {
-    dispatch({ type: "kudo_deleted", boardId: board.id, kudoId });
+    deleteKudo(board.id, kudoId); // 👀
   };
 
   return (
